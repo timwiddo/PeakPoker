@@ -15,8 +15,8 @@ import org.assertj.core.api.Assertions.assertThat
 class HandEvaluatorTest : AnnotationSpec() {
 
     @Test
-    fun `flush wird erkannt`() {
-        // fünf Karten gleicher Farbe, aber nicht in Folge
+    fun `flush is recognized`() {
+        // Five cards of the same suit, but not in sequence
         val cards = listOf(
             Card(Suit.HEARTS.name, Rank.TWO.name),
             Card(Suit.HEARTS.name, Rank.FIVE.name),
@@ -30,8 +30,8 @@ class HandEvaluatorTest : AnnotationSpec() {
     }
 
     @Test
-    fun `straight wird erkannt`() {
-        // fünf aufeinanderfolgende Werte, unterschiedliche Farben
+    fun `straight is recognized`() {
+        // Five consecutive values, different suits
         val cards = listOf(
             Card(Suit.CLUBS.name, Rank.FOUR.name),
             Card(Suit.HEARTS.name, Rank.FIVE.name),
@@ -45,8 +45,8 @@ class HandEvaluatorTest : AnnotationSpec() {
     }
 
     @Test
-    fun `vierling wird erkannt`() {
-        // vier Karten gleichen Rangs + eine beliebige Fünfte
+    fun `four of a kind is recognized`() {
+        // Four cards of the same rank + any fifth card
         val cards = listOf(
             Card(Suit.HEARTS.name, Rank.ACE.name),
             Card(Suit.DIAMONDS.name, Rank.ACE.name),
@@ -60,8 +60,8 @@ class HandEvaluatorTest : AnnotationSpec() {
     }
 
     @Test
-    fun `full house wird erkannt`() {
-        // drei gleiche + zwei gleiche
+    fun `full house is recognized`() {
+        // Three of a kind + a pair
         val cards = listOf(
             Card(Suit.HEARTS.name, Rank.KING.name),
             Card(Suit.DIAMONDS.name, Rank.KING.name),
@@ -75,7 +75,7 @@ class HandEvaluatorTest : AnnotationSpec() {
     }
 
     @Test
-    fun `high card wird erkannt, wenn nichts anderes passt`() {
+    fun `high card is recognized when nothing else fits`() {
         val cards = listOf(
             Card(Suit.HEARTS.name, Rank.TWO.name),
             Card(Suit.DIAMONDS.name, Rank.FIVE.name),
@@ -89,8 +89,8 @@ class HandEvaluatorTest : AnnotationSpec() {
     }
 
     @Test
-    fun `evaluate wirft IllegalArgumentException bei Duplikaten`() {
-        // given: fünf Karten, wobei zwei identisch sind
+    fun `evaluate throws IllegalArgumentException for duplicates`() {
+        // Five cards, two are identical
         val duplicateCard = Card(Suit.HEARTS.name, Rank.ACE.name)
         val hand = listOf(
             duplicateCard,
@@ -100,7 +100,6 @@ class HandEvaluatorTest : AnnotationSpec() {
             Card(Suit.SPADES.name, Rank.JACK.name)
         )
 
-        // expect
         shouldThrow<IllegalArgumentException> {
             HandEvaluator.evaluate(hand)
         }

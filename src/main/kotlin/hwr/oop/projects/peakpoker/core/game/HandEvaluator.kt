@@ -9,7 +9,7 @@ import hwr.oop.projects.peakpoker.core.card.Rank
 object HandEvaluator {
     /**
      * Determines the ranking of the given list of five cards.
-     * @param cards exactly five cards representing the hand
+     * @param list of five cards representing the hand
      * @return the corresponding HandRanking
      */
     fun evaluate(cards: List<Card>): HandRanking {
@@ -24,10 +24,10 @@ object HandEvaluator {
         // Count occurrences of each rank
         val rankCounts = ranks.groupingBy { it }.eachCount().values.sortedDescending()
 
-        // Check for flush: all suits equal
+        // Check for flush (boolean): all suits equal
         val isFlush = suits.distinct().size == 1
 
-        // Check for straight: sequence of five values or wheel straight (A-2-3-4-5)
+        // Check for straight (boolean): sequence of five values or wheel straight (A-2-3-4-5)
         val isStraight = ranks.zipWithNext().all { (a, b) -> b == a + 1 }
         || ranks == listOf(0, 1, 2, 3, Rank.ACE.ordinal)
 
