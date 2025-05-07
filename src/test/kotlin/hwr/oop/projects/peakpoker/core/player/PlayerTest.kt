@@ -5,7 +5,6 @@ import io.kotest.core.spec.style.AnnotationSpec
 import org.assertj.core.api.Assertions.assertThat
 
 class PlayerTest : AnnotationSpec() {
-
     @Test
     fun `Player has name` () {
         val player = Player("Hans")
@@ -17,8 +16,9 @@ class PlayerTest : AnnotationSpec() {
     fun `Player's bet can be raised`() {
         val player = Player("Hans")
         player.raiseBet(10)
-        assertThat(player.getBet).isEqualTo(10)
+        assertThat(player.getBetAmount()).isEqualTo(10)
     }
+
 
     @Test
     fun `Right exception thrown on negative bet`() {
