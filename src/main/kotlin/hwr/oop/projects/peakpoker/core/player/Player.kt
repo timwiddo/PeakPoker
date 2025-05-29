@@ -1,44 +1,67 @@
 package hwr.oop.projects.peakpoker.core.player
 
-import hwr.oop.projects.peakpoker.core.card.Card
+import hwr.oop.projects.peakpoker.core.card.HoleCards
+import hwr.oop.projects.peakpoker.core.exceptions.InsufficientChipsException
+import hwr.oop.projects.peakpoker.core.exceptions.InvalidBetAmountException
+import hwr.oop.projects.peakpoker.core.exceptions.InvalidPlayerStateException
 
 class Player(
-    val name: String,
-    private var chips: Int = 0,
-    private var hand: List<Card> = emptyList(),
-    private var bet: Int = 0,
-    private var isFolded: Boolean = false,
-    private var isAllIn: Boolean = false
-) {
-    val currentBet: Int get() = bet
-    val currentChips: Int get() = chips
-    val currentHand: List<Card> get() = hand.toList()
-
-    fun raiseBet(amount: Int) {
-        when {
-            amount < 0 -> throw IllegalArgumentException("Bet amount must be positive")
-            isFolded -> throw IllegalStateException("Cannot raise bet after folding")
-            isAllIn -> throw IllegalStateException("Cannot raise bet after going all-in")
-        }
-        bet += amount
-        chips -= amount
+  override val name: String,
+  private var chips: Int = 100,
+) : PlayerInterface {
+  init {
+    if (chips < 0) {
+      throw InsufficientChipsException("Chips amount must be non-negative")
     }
-
-    fun fold() {
-        isFolded = true
+    if (name.isBlank()) {
+      throw InvalidPlayerStateException("Player name cannot be blank")
     }
+  }
 
-    fun isFolded(): Boolean {
-        return isFolded
+  var isFolded: Boolean = false
+  var isAllIn: Boolean = false
+
+  private var hand: HoleCards = HoleCards(emptyList(), this)
+  private var bet: Int = 0
+
+  fun getBet(): Int {
+    return bet
+  }
+
+  fun getChips(): Int {
+    return chips
+  }
+
+  fun getHand(): HoleCards {
+    return hand
+  }
+
+  fun assignHand(cards: HoleCards) {
+    hand = cards
+  }
+
+  /**
+   * Sets the bet amount for the player.
+   *
+   * @param chips The amount of chips to bet
+   * @throws InvalidBetAmountException If the chips amount is not greater than zero
+   */
+  fun setBetAmount(chips: Int) {
+    if (chips <= 0) {
+      throw InvalidBetAmountException("Chips amount must be greater than zero")
     }
+    this.chips -= chips - bet
+    bet = chips
+  }
 
-    fun allIn() {
-        isAllIn = true
-    }
+  fun fold() {
+    isFolded = true
+  }
 
-    fun isAllIn(): Boolean {
-        return isAllIn
-    }
-
-    // TODO: Implement the hand functionality and think about it's logic
+  fun allIn() {
+    val totalBet = chips + bet
+    chips = 0
+    setBetAmount(totalBet)
+    isAllIn = true
+  }
 }
